@@ -176,38 +176,39 @@ export class TraceCleanupSolver extends BaseSolver {
       graphics.lines!.push(line)
     }
     // ZENITH MERGE — same-net traces on same axis
-    const mergedTraces = new Map<string, any>();
+    const mergedTraces = new Map<string, any>()
 
     for (const trace of this.outputTraces) {
-      const key = `${trace.globalConnNetId}-${Math.round(trace.tracePath[0].y * 100)}`; // same Y (or use x for horizontal)
+      const key = `${trace.globalConnNetId}-${Math.round(trace.tracePath[0].y * 100)}` // same Y (or use x for horizontal)
       if (mergedTraces.has(key)) {
-        const existing = mergedTraces.get(key);
+        const existing = mergedTraces.get(key)
         // Extend path
-        existing.tracePath = existing.tracePath.concat(trace.tracePath.slice(1));
+        existing.tracePath = existing.tracePath.concat(trace.tracePath.slice(1))
       } else {
-        mergedTraces.set(key, { ...trace });
+        mergedTraces.set(key, { ...trace })
       }
     }
 
-    this.outputTraces = Array.from(mergedTraces.values());   
+    this.outputTraces = Array.from(mergedTraces.values())
     // ZENITH MERGE — same-net traces on same axis
-    const merged = new Map<string, any>();
+    const merged = new Map<string, any>()
 
     for (const trace of this.outputTraces) {
-      const isHorizontal = trace.tracePath[0].y === trace.tracePath[trace.tracePath.length - 1].y;
-      const key = isHorizontal 
+      const isHorizontal =
+        trace.tracePath[0].y === trace.tracePath[trace.tracePath.length - 1].y
+      const key = isHorizontal
         ? `${trace.globalConnNetId}-y${Math.round(trace.tracePath[0].y * 100)}`
-        : `${trace.globalConnNetId}-x${Math.round(trace.tracePath[0].x * 100)}`;
+        : `${trace.globalConnNetId}-x${Math.round(trace.tracePath[0].x * 100)}`
 
       if (merged.has(key)) {
-        const existing = merged.get(key);
-        existing.tracePath = existing.tracePath.concat(trace.tracePath.slice(1));
+        const existing = merged.get(key)
+        existing.tracePath = existing.tracePath.concat(trace.tracePath.slice(1))
       } else {
-        merged.set(key, { ...trace });
+        merged.set(key, { ...trace })
       }
     }
 
-    this.outputTraces = Array.from(merged.values());
- return graphics
+    this.outputTraces = Array.from(merged.values())
+    return graphics
   }
 }
